@@ -1,0 +1,123 @@
+SQL> 
+SQL> MERGE INTO rental target
+  2  USING ( SELECT   DISTINCT
+  3    r.rental_id
+  4  ,	c.contact_id
+  5  ,	tu.check_out_date AS check_out_date
+  6  ,	tu.return_date AS return_date
+  7  ,	3 AS created_by
+  8  ,	SYSDATE AS creation_date
+  9  ,	3 AS last_updated_by
+ 10  ,	SYSDATE AS last_update_date
+ 11  FROM     member m INNER JOIN contact c
+ 12  ON       m.member_id = c.member_id
+ 13  INNER JOIN transaction_upload tu
+ 14  ON       c.first_name = tu.first_name
+ 15  AND      NVL(c.middle_name,'x') = NVL(tu.middle_name,'x')
+ 16  AND      c.last_name = tu.last_name
+ 17  AND      m.account_number =tu.account_number
+ 18  LEFT JOIN rental r
+ 19  ON       c.contact_id = r.customer_id
+ 20  AND      TRUNC(tu.check_out_date) = TRUNC(r.check_out_date)
+ 21  AND      TRUNC(tu.return_date) = TRUNC(r.check_out_date)) source
+ 22  ON (target.rental_id = source.rental_id)
+ 23  WHEN MATCHED THEN
+ 24  UPDATE SET target.check_out_date = source.check_out_date
+ 25  ,		target.return_date = source.return_date
+ 26  WHEN NOT MATCHED THEN
+ 27  INSERT VALUES
+ 28  ( rental_s1.nextval
+ 29  , source.contact_id
+ 30  , source.check_out_date
+ 31  , source.return_date
+ 32  , source.created_by
+ 33  , source.creation_date
+ 34  , source.last_updated_by
+ 35  , source.last_update_date);
+
+4681 rows merged.
+
+SQL> 
+SQL> SELECT   TO_CHAR(COUNT(*),'99,999') AS "Rental after merge"
+  2  FROM     rental;
+
+Rental                                                                          
+-------                                                                         
+  4,689                                                                         
+
+1 row selected.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> MERGE INTO rental_item target
+  2  USING ( SELECT
+  3  	ri.rental_item_id
+  4  ,	r.rental_id
+  5  ,	tu.item_id
+  6  ,	3 AS created_by
+  7  ,	SYSDATE AS creation_date
+  8  ,	3 AS last_updated_by
+  9  ,	SYSDATE AS last_update_date
+ 10  ,	cl.common_lookup_id AS rental_item_type
+ 11  ,	r.return_date - r.check_out_date AS rental_item_price
+ 12  FROM     member m INNER JOIN contact c
+ 13  ON       m.member_id = c.member_id
+ 14  INNER JOIN transaction_upload tu
+ 15  ON       c.first_name = tu.first_name
+ 16  AND      NVL(c.middle_name,'x') = NVL(tu.middle_name,'x')
+ 17  AND      c.last_name = tu.last_name
+ 18  AND      m.account_number =tu.account_number
+ 19  LEFT JOIN rental r
+ 20  ON       c.contact_id = r.customer_id
+ 21  AND      TRUNC(tu.check_out_date) = TRUNC(r.check_out_date)
+ 22  AND      TRUNC(tu.return_date) = TRUNC(r.check_out_date)
+ 23  INNER JOIN common_lookup cl
+ 24  ON       cl.common_lookup_table = 'RENTAL_ITEM'
+ 25  AND      cl.common_lookup_column = 'RENTAL_ITEM_TYPE'
+ 26  AND      cl.common_lookup_type = tu.rental_item_type
+ 27  LEFT JOIN rental_item ri
+ 28  ON       r.rental_id = ri.rental_id) source
+ 29  ON (target.rental_item_id = source.rental_item_id)
+ 30  WHEN MATCHED THEN
+ 31  UPDATE SET target.rental_item_type = source.rental_item_type
+ 32  ,		target.rental_item_price = source.rental_item_price
+ 33  WHEN NOT MATCHED THEN
+ 34  INSERT
+ 35  ( rental_item_id
+ 36  , rental_id
+ 37  , item_id
+ 38  , created_by
+ 39  , creation_date
+ 40  , last_updated_by
+ 41  , last_update_date
+ 42  , rental_item_type
+ 43  , rental_item_price)
+ 44  VALUES
+ 45  ( rental_item_s1.nextval
+ 46  , source.rental_id
+ 47  , source.item_id
+ 48  , source.created_by
+ 49  , source.creation_date
+ 50  , source.last_updated_by
+ 51  , source.last_update_date
+ 52  , source.rental_item_type
+ 53  , source.rental_item_price);
+, source.rental_id
+  *
+ERROR at line 46:
+ORA-01400: cannot insert NULL into ("STUDENT"."RENTAL_ITEM"."RENTAL_ID") 
+
+
+SQL> 
+SQL> SELECT   TO_CHAR(COUNT(*),'99,999') AS "Rental Item after merge"
+  2  FROM     rental_item;
+
+Rental                                                                          
+-------                                                                         
+     13                                                                         
+
+1 row selected.
+
+SQL> 
+SQL> SPOOL OFF

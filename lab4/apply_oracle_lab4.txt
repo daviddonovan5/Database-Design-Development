@@ -1,0 +1,612 @@
+SQL> 
+SQL> 
+SQL> --insert row into the system_user_lab
+SQL> 
+SQL> INSERT INTO system_user_lab
+  2  ( system_user_lab_id
+  3  , system_user_name
+  4  , system_user_group_id
+  5  , system_user_type
+  6  , first_name
+  7  , middle_name
+  8  , last_name
+  9  , created_by
+ 10  , creation_date
+ 11  , last_updated_by
+ 12  , last_update_date)
+ 13  VALUES
+ 14  ( system_user_lab_s1.NEXTVAL
+ 15  , 'REACHERJ'
+ 16  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+ 17         WHERE common_lookup_context = 'SYSTEM_USER_LAB'
+ 18         AND common_lookup_meaning = 'Database Administrator')
+ 19  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+ 20         WHERE common_lookup_context = 'MULTIPLE'
+ 21         AND common_lookup_meaning = 'Home')
+ 22  , 'Jack'
+ 23  , ''
+ 24  , 'Reacher'
+ 25  , 1
+ 26  , SYSDATE
+ 27  , 1
+ 28  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> 
+SQL> -- insert into common_lookup_lab
+SQL> INSERT INTO common_lookup_lab
+  2  VALUES
+  3  ( common_lookup_lab_s1.NEXTVAL
+  4  , 'MEMBER_LAB'
+  5  , 'AMERICAN_EXPRESS_CARD'
+  6  , 'American Express Card'
+  7  , 1
+  8  , SYSDATE
+  9  , 1
+ 10  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> -- insert row in Member_lab
+SQL> 
+SQL> INSERT INTO member_lab
+  2  VALUES
+  3  ( member_lab_s1.NEXTVAL
+  4  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  5         WHERE common_lookup_context = 'MEMBER'
+  6         AND common_lookup_type = 'INDIVIDUAL')
+  7  , 'X15-500-01'
+  8  , '9876-5432-1234-5678'
+  9  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+ 10         WHERE common_lookup_context = 'MEMBER_LAB'
+ 11         AND common_lookup_type = 'AMERICAN_EXPRESS_CARD')
+ 12  , 1
+ 13  , SYSDATE
+ 14  , 1
+ 15  , SYSDATE
+ 16  );
+
+1 row created.
+
+SQL> 
+SQL> 
+SQL> -- insert row for contact_lab
+SQL> 
+SQL> INSERT INTO contact_lab
+  2  VALUES
+  3  ( contact_lab_s1.NEXTVAL
+  4  , member_lab_s1.CURRVAL
+  5  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  6         WHERE common_lookup_context = 'CONTACT'
+  7         AND common_lookup_type = 'CUSTOMER')
+  8  , 'John'
+  9  , ''
+ 10  , 'Jones'
+ 11  , 1
+ 12  , SYSDATE
+ 13  , 1
+ 14  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> -- insert address_lab
+SQL> INSERT INTO address_lab
+  2  VALUES
+  3  ( address_lab_s1.NEXTVAL
+  4  , contact_lab_s1.CURRVAL
+  5  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  6         WHERE common_lookup_context = 'MULTIPLE'
+  7         AND common_lookup_type = 'HOME')
+  8  , 'Draper'
+  9  , 'Utah'
+ 10  , '84020'
+ 11  , 1
+ 12  , SYSDATE
+ 13  , 1
+ 14  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> --Insert row into Street_address_lab
+SQL> INSERT INTO street_address_lab
+  2  VALUES
+  3  ( street_address_lab_s1.NEXTVAL
+  4  , address_lab_s1.CURRVAL
+  5  , '372 East 12300 South'
+  6  , 1
+  7  , SYSDATE
+  8  , 1
+  9  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> --insert row into telepone lab
+SQL> INSERT INTO telephone_lab
+  2  VALUES
+  3  ( telephone_lab_s1.NEXTVAL
+  4  , contact_lab_s1.CURRVAL
+  5  , address_lab_s1.CURRVAL
+  6  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  7         WHERE common_lookup_context = 'MULTIPLE'
+  8         AND common_lookup_type = 'HOME')
+  9  , '001'
+ 10  , '801'
+ 11  , '435-7654'
+ 12  , 1
+ 13  , SYSDATE
+ 14  , 1
+ 15  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> --insert row into rental lab
+SQL> INSERT INTO rental_lab
+  2  VALUES
+  3  ( rental_lab_s1.NEXTVAL
+  4  , contact_lab_s1.CURRVAL
+  5  , '02-JAN-15'
+  6  , '06-JAN-15'
+  7  , 1
+  8  , SYSDATE
+  9  , 1
+ 10  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> 
+SQL> --insert row into item lab
+SQL> INSERT INTO item_lab
+  2  VALUES
+  3  ( item_lab_s1.NEXTVAL
+  4  , 'B00N1JQ2UO'
+  5  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  6         WHERE common_lookup_context = 'ITEM'
+  7         AND common_lookup_type = 'DVD_WIDE_SCREEN')
+  8  , 'Guardians of the Galaxy'
+  9  , ''
+ 10  , 'PG-13'
+ 11  , '09-DEC-14'
+ 12  , 1
+ 13  , SYSDATE
+ 14  , 1
+ 15  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> --insert row into rental item lab
+SQL> INSERT INTO rental_item_lab
+  2  VALUES
+  3  ( rental_item_lab_s1.NEXTVAL
+  4  , rental_lab_s1.CURRVAL
+  5  , item_lab_s1.CURRVAL
+  6  , 1
+  7  , SYSDATE
+  8  , 1
+  9  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> --insert row into the system_user_lab
+SQL> -- Start of the new row
+SQL> 
+SQL> INSERT INTO system_user_lab
+  2  ( system_user_lab_id
+  3  , system_user_name
+  4  , system_user_group_id
+  5  , system_user_type
+  6  , first_name
+  7  , middle_name
+  8  , last_name
+  9  , created_by
+ 10  , creation_date
+ 11  , last_updated_by
+ 12  , last_update_date)
+ 13  VALUES
+ 14  ( system_user_lab_s1.NEXTVAL
+ 15  , 'OWENSR'
+ 16  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+ 17         WHERE common_lookup_context = 'SYSTEM_USER_LAB'
+ 18         AND common_lookup_meaning = 'Database Administrator')
+ 19  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+ 20         WHERE common_lookup_context = 'MULTIPLE'
+ 21         AND common_lookup_meaning = 'Home')
+ 22  , 'Ray'
+ 23  , ''
+ 24  , 'Ownes'
+ 25  , 1
+ 26  , SYSDATE
+ 27  , 1
+ 28  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> 
+SQL> -- insert into common_lookup_lab
+SQL> INSERT INTO common_lookup_lab
+  2  VALUES
+  3  ( common_lookup_lab_s1.NEXTVAL
+  4  , 'MEMBER_LAB'
+  5  , 'DINERS_CLUB_CARD'
+  6  , 'diners Club Card'
+  7  , 1
+  8  , SYSDATE
+  9  , 1
+ 10  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> -- insert row in Member_lab
+SQL> 
+SQL> INSERT INTO member_lab
+  2  VALUES
+  3  ( member_lab_s1.NEXTVAL
+  4  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  5         WHERE common_lookup_context = 'MEMBER'
+  6         AND common_lookup_type = 'INDIVIDUAL')
+  7  , 'X15-500-02'
+  8  , '9876-5432-1234-5679'
+  9  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+ 10         WHERE common_lookup_context = 'MEMBER_LAB'
+ 11         AND common_lookup_type = 'DINERS_CLUB_CARD')
+ 12  , 1
+ 13  , SYSDATE
+ 14  , 1
+ 15  , SYSDATE
+ 16  );
+
+1 row created.
+
+SQL> 
+SQL> 
+SQL> -- insert row for contact_lab
+SQL> 
+SQL> INSERT INTO contact_lab
+  2  VALUES
+  3  ( contact_lab_s1.NEXTVAL
+  4  , member_lab_s1.CURRVAL
+  5  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  6         WHERE common_lookup_context = 'CONTACT'
+  7         AND common_lookup_type = 'CUSTOMER')
+  8  , 'Jane'
+  9  , ''
+ 10  , 'Jones'
+ 11  , 1
+ 12  , SYSDATE
+ 13  , 1
+ 14  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> -- insert address_lab
+SQL> INSERT INTO address_lab
+  2  VALUES
+  3  ( address_lab_s1.NEXTVAL
+  4  , contact_lab_s1.CURRVAL
+  5  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  6         WHERE common_lookup_context = 'MULTIPLE'
+  7         AND common_lookup_type = 'HOME')
+  8  , 'Draper'
+  9  , 'Utah'
+ 10  , '84020'
+ 11  , 1
+ 12  , SYSDATE
+ 13  , 1
+ 14  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> --Insert row into Street_address_lab
+SQL> INSERT INTO street_address_lab
+  2  VALUES
+  3  ( street_address_lab_s1.NEXTVAL
+  4  , address_lab_s1.CURRVAL
+  5  , '1872 West 5400 South'
+  6  , 1
+  7  , SYSDATE
+  8  , 1
+  9  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> --insert row into telepone lab
+SQL> INSERT INTO telephone_lab
+  2  VALUES
+  3  ( telephone_lab_s1.NEXTVAL
+  4  , contact_lab_s1.CURRVAL
+  5  , address_lab_s1.CURRVAL
+  6  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  7         WHERE common_lookup_context = 'MULTIPLE'
+  8         AND common_lookup_type = 'HOME')
+  9  , '001'
+ 10  , '801'
+ 11  , '435-7654'
+ 12  , 1
+ 13  , SYSDATE
+ 14  , 1
+ 15  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> --insert row into rental lab
+SQL> INSERT INTO rental_lab
+  2  VALUES
+  3  ( rental_lab_s1.NEXTVAL
+  4  , contact_lab_s1.CURRVAL
+  5  , '03-JAN-15'
+  6  , '05-JAN-15'
+  7  , 1
+  8  , SYSDATE
+  9  , 1
+ 10  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> 
+SQL> --insert row into item lab
+SQL> INSERT INTO item_lab
+  2  VALUES
+  3  ( item_lab_s1.NEXTVAL
+  4  , 'B00OY7YPGK'
+  5  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  6         WHERE common_lookup_context = 'ITEM'
+  7         AND common_lookup_type = 'BLU_RAY')
+  8  , 'The Maze Runner'
+  9  , ''
+ 10  , 'PG-13'
+ 11  , '16-DEC-14'
+ 12  , 1
+ 13  , SYSDATE
+ 14  , 1
+ 15  , SYSDATE);
+, (SELECT common_lookup_lab_id FROM common_lookup_lab
+          *
+ERROR at line 5:
+ORA-01400: cannot insert NULL into ("STUDENT"."ITEM_LAB"."ITEM_TYPE") 
+
+
+SQL> 
+SQL> --insert row into item lab
+SQL> INSERT INTO item_lab
+  2  VALUES
+  3  ( item_lab_s1.NEXTVAL
+  4  , 'B00OY7YPGK'
+  5  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  6         WHERE common_lookup_context = 'ITEM'
+  7         AND common_lookup_type = 'BLU-RAY')
+  8  , 'The Maze Runner'
+  9  , ''
+ 10  , 'PG-13'
+ 11  , '09-DEC-14'
+ 12  , 1
+ 13  , SYSDATE
+ 14  , 1
+ 15  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> --insert row into rental item lab
+SQL> INSERT INTO rental_item_lab
+  2  VALUES
+  3  ( rental_item_lab_s1.NEXTVAL
+  4  , rental_lab_s1.CURRVAL
+  5  , item_lab_s1.CURRVAL
+  6  , 1
+  7  , SYSDATE
+  8  , 1
+  9  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> 
+SQL> --Group membership
+SQL> -- Step 11
+SQL> 
+SQL> -- insert into common_lookup_lab
+SQL> INSERT INTO common_lookup_lab
+  2  VALUES
+  3  ( common_lookup_lab_s1.NEXTVAL
+  4  , 'CONTACT'
+  5  , 'GROUP'
+  6  , 'Group Membership'
+  7  , 1
+  8  , SYSDATE
+  9  , 1
+ 10  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> 
+SQL> -- insert row in Member_lab
+SQL> 
+SQL> INSERT INTO member_lab
+  2  VALUES
+  3  ( member_lab_s1.NEXTVAL
+  4  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  5         WHERE common_lookup_context = 'MEMBER'
+  6         AND common_lookup_type = 'GROUP')
+  7  , 'X21-777-01'
+  8  , '9876-5432-1234-5678'
+  9  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+ 10         WHERE common_lookup_context = 'MEMBER'
+ 11         AND common_lookup_type = 'DISCOVER_CARD')
+ 12  , 1
+ 13  , SYSDATE
+ 14  , 1
+ 15  , SYSDATE
+ 16  );
+
+1 row created.
+
+SQL> 
+SQL> -- insert row for contact_lab
+SQL> 
+SQL> INSERT INTO contact_lab
+  2  VALUES
+  3  ( contact_lab_s1.NEXTVAL
+  4  , member_lab_s1.CURRVAL
+  5  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  6         WHERE common_lookup_context = 'CONTACT'
+  7         AND common_lookup_type = 'GROUP')
+  8  , 'Yondu'
+  9  , ''
+ 10  , 'Udonta'
+ 11  , 1
+ 12  , SYSDATE
+ 13  , 1
+ 14  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> 
+SQL> -- insert address_lab
+SQL> INSERT INTO address_lab
+  2  VALUES
+  3  ( address_lab_s1.NEXTVAL
+  4  , contact_lab_s1.CURRVAL
+  5  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  6         WHERE common_lookup_context = 'MULTIPLE'
+  7         AND common_lookup_type = 'HOME')
+  8  , 'Draper'
+  9  , 'Utah'
+ 10  , '84020'
+ 11  , 1
+ 12  , SYSDATE
+ 13  , 1
+ 14  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> --Insert row into Street_address_lab
+SQL> INSERT INTO street_address_lab
+  2  VALUES
+  3  ( street_address_lab_s1.NEXTVAL
+  4  , address_lab_s1.CURRVAL
+  5  , '12129 South State Street'
+  6  , 1
+  7  , SYSDATE
+  8  , 1
+  9  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> --insert row into telepone lab
+SQL> INSERT INTO telephone_lab
+  2  VALUES
+  3  ( telephone_lab_s1.NEXTVAL
+  4  , contact_lab_s1.CURRVAL
+  5  , address_lab_s1.CURRVAL
+  6  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  7         WHERE common_lookup_context = 'MULTIPLE'
+  8         AND common_lookup_type = 'HOME')
+  9  , '001'
+ 10  , '801'
+ 11  , '342-8940'
+ 12  , 1
+ 13  , SYSDATE
+ 14  , 1
+ 15  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> 
+SQL> 
+SQL> -- insert row for contact_lab
+SQL> 
+SQL> INSERT INTO contact_lab
+  2  VALUES
+  3  ( contact_lab_s1.NEXTVAL
+  4  , member_lab_s1.CURRVAL
+  5  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  6         WHERE common_lookup_context = 'CONTACT'
+  7         AND common_lookup_type = 'GROUP')
+  8  , 'Peter'
+  9  , ''
+ 10  , 'Quill'
+ 11  , 1
+ 12  , SYSDATE
+ 13  , 1
+ 14  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> 
+SQL> -- insert address_lab
+SQL> INSERT INTO address_lab
+  2  VALUES
+  3  ( address_lab_s1.NEXTVAL
+  4  , contact_lab_s1.CURRVAL
+  5  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  6         WHERE common_lookup_context = 'MULTIPLE'
+  7         AND common_lookup_type = 'HOME')
+  8  , 'Draper'
+  9  , 'Utah'
+ 10  , '84020'
+ 11  , 1
+ 12  , SYSDATE
+ 13  , 1
+ 14  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> --Insert row into Street_address_lab
+SQL> INSERT INTO street_address_lab
+  2  VALUES
+  3  ( street_address_lab_s1.NEXTVAL
+  4  , address_lab_s1.CURRVAL
+  5  , '12129 South State Street'
+  6  , 1
+  7  , SYSDATE
+  8  , 1
+  9  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> --insert row into telepone lab
+SQL> INSERT INTO telephone_lab
+  2  VALUES
+  3  ( telephone_lab_s1.NEXTVAL
+  4  , contact_lab_s1.CURRVAL
+  5  , address_lab_s1.CURRVAL
+  6  , (SELECT common_lookup_lab_id FROM common_lookup_lab
+  7         WHERE common_lookup_context = 'MULTIPLE'
+  8         AND common_lookup_type = 'HOME')
+  9  , '001'
+ 10  , '801'
+ 11  , '342-8941'
+ 12  , 1
+ 13  , SYSDATE
+ 14  , 1
+ 15  , SYSDATE);
+
+1 row created.
+
+SQL> 
+SQL> 
+SQL> SPOOL OFF;
